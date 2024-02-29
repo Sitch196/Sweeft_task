@@ -2,16 +2,19 @@ import { Link } from "react-router-dom";
 
 export default function Navigation() {
   return (
-    <nav>
-      <ul>
+    <nav className="bg-white p-4 shadow-md">
+      <ul className="flex justify-center space-x-4">
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/" className="text-blue-500 hover:underline">
+            Home
+          </Link>
         </li>
         <li>
-          <Link to="/history">History</Link>
+          <Link to="/history" className="text-blue-500 hover:underline">
+            History
+          </Link>
         </li>
       </ul>
-      <p className="text-red-600">burger</p>
     </nav>
   );
 }

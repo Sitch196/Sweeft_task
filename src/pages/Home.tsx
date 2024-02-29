@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
+import { fetchAndCacheImages } from "../utils/fetchAndCacheImages";
 
 interface Image {
   id: string;
@@ -12,27 +13,29 @@ const Home: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const [images, setImages] = useState<Image[]>([]);
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(
-          `https://api.unsplash.com/photos/random?count=10&query=${query}&client_id=2cKskRQ7DIMTiL0ugC_XvC9I6m6AdSsE2EuWPZtySoM`
-        );
-        const data = await response.json();
+  const fetchImages = async (searchQuery: string) => {
+    let data;
 
-        setImages(data);
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-    };
-
-    if (query) {
-      fetchImages();
+    if (searchQuery) {
+      const response = await fetch(
+        `https://api.unsplash.com/photos/random?count=20&query=${searchQuery}&client_id=2cKskRQ7DIMTiL0ugC_XvC9I6m6AdSsE2EuWPZtySoM`
+      );
+      data = await response.json();
+    } else {
+      const popularImages = await fetchAndCacheImages();
+      data = popularImages;
     }
+
+    setImages(data);
+    localStorage.setItem(`cachedImages_${searchQuery}`, JSON.stringify(data));
+  };
+
+  useEffect(() => {
+    fetchImages(query);
   }, [query]);
 
   return (
-    <div>
+    <div className="container mx-auto mt-8 p-3">
       <input
         type="text"
         placeholder="Type a keyword..."
@@ -40,15 +43,16 @@ const Home: React.FC = () => {
         onChange={(e: ChangeEvent<HTMLInputElement>) =>
           setQuery(e.target.value)
         }
+        className="w-full p-2 border border-gray-300 rounded-md indent-3"
       />
 
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {images.map((image) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+        {images?.map((image) => (
           <img
             key={image.id}
             src={image.urls.regular}
             alt={image.alt_description}
-            style={{ margin: "10px", maxWidth: "300px" }}
+            className="w-full h-[250px] object-cover rounded-md"
           />
         ))}
       </div>
