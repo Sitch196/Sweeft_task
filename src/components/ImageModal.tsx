@@ -1,21 +1,20 @@
-// ImageModal.tsx
-import React from "react";
-
 interface Images {
   id: string;
   urls: {
     regular: string;
   };
   alt_description: string;
-  downloads: number;
-  views: number;
-  likes: number;
+  downloads?: number;
+  views?: number;
+  likes?: number;
 }
 
-const ImageModal: React.FC<{ image: Images | null; onClose: () => void }> = ({
-  image,
-  onClose,
-}) => {
+interface ImageModalProps {
+  image: Images | null;
+  onClose: () => void;
+}
+
+const ImageModal: React.FC<ImageModalProps> = ({ image, onClose }) => {
   if (!image) return null;
 
   return (

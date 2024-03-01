@@ -1,6 +1,5 @@
-// History.tsx
 import React, { useState } from "react";
-import { useSearchHistoryStore } from "../store/searchHistoryStore"; // Import the store
+import { useSearchHistoryStore } from "../store/searchHistoryStore";
 
 const History: React.FC = () => {
   const searchHistory = useSearchHistoryStore((state) => state.searchHistory);
